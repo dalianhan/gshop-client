@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <router-view/>
-    <FooterGuide/>
+    <FooterGuide v-if="$route.meta.isShowFooter"/>
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
+
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
 
   export default {
@@ -14,6 +15,9 @@
       return{
         msg:'App Component'
       }
+    },
+    mounted(){
+      this.$store.dispatch('getAddress')
     },
     components:{
       FooterGuide
