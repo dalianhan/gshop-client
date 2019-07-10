@@ -16,8 +16,8 @@
     <nav class="msite_nav border-1px">
       <div class="swiper-container">
         <div class="swiper-wrapper">
-          <div class="swiper-slide" v-for="(categorys,index) in categorysArr" :key="index">
-            <a href="javascript:" class="link_to_food" v-for="(c,index) in categorys" :key="index">
+          <div class="swiper-slide" v-for="(categorys, index) in categorysArr" :key="index">
+            <a href="javascript:" class="link_to_food" v-for="(c, index) in categorys" :key="index">
               <div class="food_container">
                 <img :src="'https://fuss10.elemecdn.com' + c.image_url">
               </div>
@@ -36,9 +36,10 @@
 </template>
 
 <script type="text/ecmascript-6">
+
   import { mapState } from 'vuex'
   import Swiper from 'swiper'
-  import 'swiper/dist/css/swiper.min.css'
+  import 'swiper/dist/css/swiper.css'
   import ShopList from '../../components/ShopList/ShopList.vue'
 
 
@@ -50,7 +51,7 @@
     computed:{
       ...mapState(['address','categorys']),
 
-      categoryArr(){
+      categorysArr(){
         const bigArr = []
         let smallArr = []
         const {categorys} = this
@@ -73,24 +74,73 @@
     },
 
     //组建界面初始显示之后立即回调
-    mounted(){
+    async mounted(){
       //分发action,异步获取商家列表
-      this.$store.dispatch('getShops')
+      this.$store.dispatch("getShops")
       //分发action,异步获取分类列表
-      this.$store.dispatch('getCategorys')
+      /* this.$store.dispatch("getCategorys",() => {
+        this.$nextTick(() => {
+          new Swiper('.swiper-container', {
+          //direction: 'vertical', // 垂直切换选项
+            loop: true, // 循环模式选项
 
+          // 如果需要分页器
+            pagination: {
+            el: '.swiper-pagination',
+            }
+          })
+        })
 
-      var mySwiper = new Swiper('.swiper-container', {
-        //direction: 'vertical', // 垂直切换选项
+      }) */
+
+      await this.$store.dispatch("getCategorys")
+      new Swiper('.swiper-container', {
+      //direction: 'vertical', // 垂直切换选项
         loop: true, // 循环模式选项
 
-        // 如果需要分页器
+      // 如果需要分页器
         pagination: {
-          el: '.swiper-pagination',
+        el: '.swiper-pagination',
         }
       })
 
+
+
+
+
+      /* setTimeout(() => {
+        var mySwiper = new Swiper('.swiper-container', {
+          //direction: 'vertical', // 垂直切换选项
+          loop: true, // 循环模式选项
+
+          // 如果需要分页器
+          pagination: {
+            el: '.swiper-pagination',
+          }
+        })
+      },1000); */
+
     },
+//解决创建swiper对象之后不能正常轮播，因为创建对象的时机太早，必须在李彪显示之后，解决：watch+nextTick
+//callback+nextTick()
+//利用dispatch()返回的promise
+    /* watch:{
+      categorys(){
+        this.$nextTick(() => {
+          new Swiper('.swiper-container', {
+          //direction: 'vertical', // 垂直切换选项
+            loop: true, // 循环模式选项
+
+          // 如果需要分页器
+            pagination: {
+            el: '.swiper-pagination',
+            }
+          })
+        })
+
+      }
+    }, */
+
     components : {
       ShopList
     }

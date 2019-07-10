@@ -21,12 +21,14 @@ export default {
     }
   },
   // 异步获取分类列表
-  async getCategorys({commit}) {
+  async getCategorys({commit},callback) {
 
     const result = await reqCategorys()
     if (result.code === 0) {
       const categorys = result.data
       commit(RECEIVE_CATEGORYS, categorys)
+
+      typeof callback === 'function' && callback()
     }
   },
   // 异步获取商家列表
